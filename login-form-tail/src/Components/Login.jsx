@@ -1,178 +1,153 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { FaGoogle, FaGithub, FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginForm() {
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert(isLoginMode ? "Logged in!" : "Signed up!");
-    }, 2000); // Simulated API response
-  };
+  const [showPassword, setShowPassword] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <div className={`flex justify-center items-center min-h-screen transition-colors duration-500 ${darkMode ? "bg-black text-white" : "bg-gray-100 text-black"}`}>
-      <div className={`relative w-[430px] p-8 rounded-2xl shadow-lg transition-all duration-500 ${darkMode ? "bg-black bg-opacity-50 backdrop-blur-lg" : "bg-white"}`}>
+    <div className={`flex flex-col items-center justify-center min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      {/* Dark Mode Toggle */}
+      <button 
+        onClick={() => setDarkMode(!darkMode)}
+        className="absolute top-5 right-5 p-2 bg-gray-800 text-white rounded-full shadow-md"
+      >
+        {darkMode ? "☀️" : "🌙"}
+      </button>
 
-        {/* Dark Mode Toggle */}
-        <button
-          className="absolute top-4 right-4 p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition"
-          onClick={() => setDarkMode(!darkMode)}
-        >
-          {darkMode ? "🌞" : "🌙"}
-        </button>
-
+      {/* Login Form Container */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className={`w-[430px] ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} p-8 rounded-2xl shadow-lg relative`}
+      >
         {/* Header Titles */}
-        <div className="flex justify-center mb-6">
-          <h2 className="text-3xl font-semibold text-center transition-all duration-500">
+        <div className="flex justify-center mb-4">
+          <h2 className="text-3xl font-semibold text-center">
             {isLoginMode ? "Login" : "Sign Up"}
           </h2>
         </div>
 
         {/* Tab Controls */}
-        <div className="relative flex h-12 mb-6 border border-red-600 rounded-full overflow-hidden">
+        <div className="relative flex h-12 mb-6 border border-gray-300 rounded-full overflow-hidden">
           <button
-            className={`w-1/2 text-lg font-medium transition-all z-10 ${isLoginMode ? "text-white" : "text-black"}`}
+            className={`w-1/2 text-lg font-medium transition-all z-10 ${
+              isLoginMode ? "text-white" : "text-black"
+            }`}
             onClick={() => setIsLoginMode(true)}
           >
             Login
           </button>
           <button
-            className={`w-1/2 text-lg font-medium transition-all z-10 ${!isLoginMode ? "text-white" : "text-black"}`}
+            className={`w-1/2 text-lg font-medium transition-all z-10 ${
+              !isLoginMode ? "text-white" : "text-black"
+            }`}
             onClick={() => setIsLoginMode(false)}
           >
             Signup
           </button>
-          <div
-            className={`absolute top-0 h-full w-1/2 rounded-full bg-gradient-to-r from-red-700 to-red-500 transition-all duration-500 ${isLoginMode ? "left-0" : "left-1/2"}`}
-          ></div>
+          <motion.div
+            className="absolute top-0 h-full w-1/2 rounded-full bg-gradient-to-r from-red-700 via-black to-black"
+            animate={{ left: isLoginMode ? "0%" : "50%" }}
+            transition={{ duration: 0.3 }}
+          ></motion.div>
         </div>
 
         {/* Form Section */}
-        <form className="space-y-6" onSubmit={handleSubmit}>
-
+        <motion.form 
+          key={isLoginMode} 
+          initial={{ opacity: 0, x: 50 }} 
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-4"
+        >
           {/* Signup-only Field */}
           {!isLoginMode && (
-            <div className="relative">
-              <input
-                type="text"
-                id="name"
-                required
-                className="peer w-full p-3 bg-transparent border-b-2 border-gray-600 outline-none focus:border-red-500 placeholder-transparent"
-                placeholder="Name"
-              />
-              <label
-                htmlFor="name"
-                className="absolute left-3 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-8 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-3 peer-focus:text-sm peer-focus:text-red-500"
-              >
-                Name
-              </label>
-            </div>
+            <input
+              type="text"
+              placeholder="Name"
+              required
+              className="w-full p-3 border-b-2 border-gray-300 outline-none focus:border-red-500 placeholder-gray-400"
+            />
           )}
 
           {/* Shared Fields */}
+          <input
+            type="email"
+            placeholder="Email Address"
+            required
+            className="w-full p-3 border-b-2 border-gray-300 outline-none focus:border-red-500 placeholder-gray-400"
+          />
           <div className="relative">
             <input
-              type="email"
-              id="email"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
               required
-              className="peer w-full p-3 bg-transparent border-b-2 border-gray-600 outline-none focus:border-red-500 placeholder-transparent"
-              placeholder="Email Address"
+              className="w-full p-3 border-b-2 border-gray-300 outline-none focus:border-red-500 placeholder-gray-400"
             />
-            <label
-              htmlFor="email"
-              className="absolute left-3 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-8 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-3 peer-focus:text-sm peer-focus:text-red-500"
+            <button 
+              type="button" 
+              className="absolute right-3 top-3 text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
             >
-              Email Address
-            </label>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
 
-          <div className="relative">
+          {!isLoginMode && (
             <input
               type="password"
-              id="password"
+              placeholder="Confirm Password"
               required
-              className="peer w-full p-3 bg-transparent border-b-2 border-gray-600 outline-none focus:border-red-500 placeholder-transparent"
-              placeholder="Password"
+              className="w-full p-3 border-b-2 border-gray-300 outline-none focus:border-red-500 placeholder-gray-400"
             />
-            <label
-              htmlFor="password"
-              className="absolute left-3 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-8 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-3 peer-focus:text-sm peer-focus:text-red-500"
-            >
-              Password
-            </label>
-          </div>
-
-          {/* Signup-only Field */}
-          {!isLoginMode && (
-            <div className="relative">
-              <input
-                type="password"
-                id="confirm-password"
-                required
-                className="peer w-full p-3 bg-transparent border-b-2 border-gray-600 outline-none focus:border-red-500 placeholder-transparent"
-                placeholder="Confirm Password"
-              />
-              <label
-                htmlFor="confirm-password"
-                className="absolute left-3 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-8 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-focus:top-3 peer-focus:text-sm peer-focus:text-red-500"
-              >
-                Confirm Password
-              </label>
-            </div>
           )}
 
-          {/* Forgot Password (Only for Login) */}
           {isLoginMode && (
             <div className="text-right">
-              <a href="#" className="text-red-500 hover:underline">
+              <a href="#" className="text-red-600 hover:underline">
                 Forgot password?
               </a>
             </div>
           )}
 
-          {/* Submit Button with Loader */}
-          <button
-            className="w-full p-3 bg-red-600 text-white rounded-full text-lg font-medium hover:bg-red-700 transition flex justify-center items-center"
-          >
-            {isLoading ? <span className="animate-spin border-4 border-white border-t-transparent rounded-full w-5 h-5"></span> : isLoginMode ? "Login" : "Signup"}
+          {/* Submit Button */}
+          <button className="w-full p-3 bg-gradient-to-r from-red-700 via-black to-black text-white rounded-full text-lg font-medium hover:opacity-90 transition">
+            {isLoginMode ? "Login" : "Signup"}
           </button>
 
-          {/* Social Logins */}
-          <div className="flex justify-center space-x-4 mt-4">
-            <button className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" className="w-6 h-6"/>
+          {/* OAuth Buttons */}
+          <div className="flex justify-between mt-4">
+            <button className="flex items-center gap-2 p-3 border rounded-lg w-1/2 justify-center bg-white shadow hover:shadow-md transition">
+              <FaGoogle className="text-red-500" /> Google
             </button>
-            <button className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" alt="Facebook" className="w-6 h-6"/>
-            </button>
-            <button className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/twitter/twitter-original.svg" alt="Twitter" className="w-6 h-6"/>
+            <button className="flex items-center gap-2 p-3 border rounded-lg w-1/2 justify-center bg-white shadow hover:shadow-md transition">
+              <FaGithub className="text-gray-700" /> GitHub
             </button>
           </div>
 
           {/* Switch Mode Link */}
           <p className="text-center text-gray-600">
-            {isLoginMode ? "Don't have an account?" : "Already have an account?"}{" "}
+            {isLoginMode ? "Don't have an account?" : "Already have an account?"} 
             <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 setIsLoginMode(!isLoginMode);
               }}
-              className="text-red-500 hover:underline"
+              className="text-red-600 hover:underline ml-1"
             >
               {isLoginMode ? "Signup now" : "Login"}
             </a>
           </p>
-        </form>
-      </div>
+        </motion.form>
+      </motion.div>
     </div>
   );
 }
 
 export default LoginForm;
+
